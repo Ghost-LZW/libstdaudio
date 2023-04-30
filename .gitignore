@@ -2,3 +2,6 @@
 cmake-build*
 .DS_Store
 /.vs
+/build
+
+compile_commands.json
