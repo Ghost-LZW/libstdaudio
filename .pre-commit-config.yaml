@@ -1,0 +1,27 @@
+fail_fast: false
+exclude: |
+    (?x)^(
+        include/experimental/audio_backend/__coreaudio_backend.h|
+        include/experimental/audio_backend/__wasapi_backend.h
+    )$
+repos:
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: clang-format
+        args: [-i]
+      - id: clang-tidy
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-docstring-first
+      - id: check-added-large-files
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.5.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]

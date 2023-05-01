@@ -1,10 +1,11 @@
 // libstdaudio
 // Copyright (c) 2018 - Timur Doumler
 // Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE.md or copy at
+// http://boost.org/LICENSE_1_0.txt)
 
-#include <audio>
 #include "catch/catch.hpp"
+#include <experimental/audio>
 
 using namespace std::experimental;
 
@@ -16,9 +17,7 @@ TEST_CASE("Interleaved contiguous buffer") {
     CHECK(buffer.data() == data.data());
   }
 
-  SECTION("is_contiguous returns true") {
-    CHECK(buffer.is_contiguous());
-  }
+  SECTION("is_contiguous returns true") { CHECK(buffer.is_contiguous()); }
 
   SECTION("frames_are_contiguous returns true") {
     CHECK(buffer.frames_are_contiguous());
@@ -41,7 +40,7 @@ TEST_CASE("Interleaved contiguous buffer") {
   }
 
   SECTION("Element read (const)") {
-    const auto& cbuffer = buffer;
+    const auto &cbuffer = buffer;
     CHECK(cbuffer(0, 0) == 0);
     CHECK(cbuffer(1, 0) == 2);
     CHECK(cbuffer(2, 0) == 4);
@@ -74,11 +73,13 @@ TEST_CASE("Deinterleaved contiguous buffer") {
     CHECK(buffer.is_contiguous());
   }
 
-  SECTION("Deinterleaved contiguous buffer satisfies frames_are_contiguous() == false") {
+  SECTION("Deinterleaved contiguous buffer satisfies frames_are_contiguous() "
+          "== false") {
     CHECK(!buffer.frames_are_contiguous());
   }
 
-  SECTION("Deinterleaved contiguous buffer satisfies channels_are_contiguous() == true") {
+  SECTION("Deinterleaved contiguous buffer satisfies channels_are_contiguous() "
+          "== true") {
     CHECK(buffer.channels_are_contiguous());
   }
 
@@ -95,7 +96,7 @@ TEST_CASE("Deinterleaved contiguous buffer") {
   }
 
   SECTION("Element read (const)") {
-    const auto& cbuffer = buffer;
+    const auto &cbuffer = buffer;
     CHECK(cbuffer(0, 0) == 0);
     CHECK(cbuffer(1, 0) == 1);
     CHECK(cbuffer(2, 0) == 2);
@@ -119,17 +120,13 @@ TEST_CASE("Deinterleaved contiguous buffer") {
 TEST_CASE("Deinterleaved pointer-to-pointer  buffer") {
   std::array<float, 3> left = {0, 1, 2};
   std::array<float, 3> right = {3, 4, 5};
-  std::array<float*, 2> data = {left.data(), right.data()};
+  std::array<float *, 2> data = {left.data(), right.data()};
 
   auto buffer = audio_buffer(data.data(), 3, 2, ptr_to_ptr_deinterleaved);
 
-  SECTION("data() returns nullptr") {
-    CHECK(buffer.data() == nullptr);
-  }
+  SECTION("data() returns nullptr") { CHECK(buffer.data() == nullptr); }
 
-  SECTION("is_contiguous returns false") {
-    CHECK(!buffer.is_contiguous());
-  }
+  SECTION("is_contiguous returns false") { CHECK(!buffer.is_contiguous()); }
 
   SECTION("frames_are_contiguous returns false") {
     CHECK(!buffer.frames_are_contiguous());
@@ -152,7 +149,7 @@ TEST_CASE("Deinterleaved pointer-to-pointer  buffer") {
   }
 
   SECTION("Element read (const)") {
-    const auto& cbuffer = buffer;
+    const auto &cbuffer = buffer;
     CHECK(cbuffer(0, 0) == 0);
     CHECK(cbuffer(1, 0) == 1);
     CHECK(cbuffer(2, 0) == 2);

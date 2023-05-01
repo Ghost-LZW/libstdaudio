@@ -1,0 +1,18 @@
+// libstdaudio
+// Copyright (c) 2018 - Timur Doumler
+// Copyright 2023 Zongwei Lan. All rights reserved.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
+
+#pragma once
+
+#include "experimental/__p1386/audio_buffer.h"
+#include "experimental/__p1386/audio_device.h"
+
+#ifdef __APPLE__
+  #include "experimental/audio_backend/__coreaudio_backend.h"
+#elif defined(_WIN32)
+  #include "experimental/audio_backend/__wasapi_backend.h"
+#else
+  #include "experimental/audio_backend/__null_backend.h"
+#endif // __APPLE__
