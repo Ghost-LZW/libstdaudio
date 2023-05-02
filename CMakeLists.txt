@@ -13,6 +13,9 @@ include(CheckIncludeFileCXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
+option(AUDIO_ENABLE_TESTS "Enable tests." ON)
+option(AUDIO_ENABLE_EXAMPLES "Build examples." ON)
+
 if (MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX")
 else ()
@@ -70,18 +73,13 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/audioConfig.cmake ${CMAKE_CURRENT_BINA
 )
 
 ###################################################
-# Test and Examples, move into their own directory
+# Test and Examples
 ###################################################
 
-include_directories(include)
+if (AUDIO_ENABLE_EXAMPLES)
+  add_subdirectory(examples)
+endif()
 
-add_executable(white_noise examples/white_noise.cpp)
-add_executable(print_devices examples/print_devices.cpp)
-add_executable(sine_wave examples/sine_wave.cpp)
-add_executable(melody examples/melody.cpp)
-add_executable(level_meter examples/level_meter.cpp)
-
-add_executable(test
-        test/test_main.cpp
-        test/audio_buffer_test.cpp
-        test/audio_device_test.cpp)
+if (AUDIO_ENABLE_TESTS)
+  add_subdirectory(test)
+endif()

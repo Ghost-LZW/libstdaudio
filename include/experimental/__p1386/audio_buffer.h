@@ -11,6 +11,12 @@
 #include <chrono>
 #include <optional>
 
+#if __cpp_lib_mdspan >= 202207L
+#include <mdspan>
+#else
+#include <experimental/mdspan>
+#endif
+
 #include "experimental/__p1386/config.h"
 
 _LIBSTDAUDIO_NAMESPACE_BEGIN
