@@ -87,6 +87,18 @@ public:
     return _channels[channel][frame * _stride];
   }
 
+#if __cpp_multidimensional_subscript >= 202110L
+  sample_type &operator[](index_type frame, index_type channel) noexcept {
+    return const_cast<sample_type &>(
+        as_const(*this).operator()(frame, channel));
+  }
+
+  const sample_type &operator[](index_type frame,
+                                index_type channel) const noexcept {
+    return _channels[channel][frame * _stride];
+  }
+#endif
+
 private:
   bool _is_contiguous = false;
   index_type _num_frames = 0;
