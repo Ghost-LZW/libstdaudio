@@ -1,5 +1,6 @@
 .idea
 cmake-build*
+Testing
 .DS_Store
 .cache
 /.vs
