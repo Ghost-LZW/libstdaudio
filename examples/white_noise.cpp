@@ -26,7 +26,7 @@ int main() {
 
       for (int frame = 0; frame < out.size_frames(); ++frame)
         for (int channel = 0; channel < out.size_channels(); ++channel)
-          out(frame, channel) = white_noise(gen);
+          out(channel, frame) = white_noise(gen);
     });
 
     device->start();

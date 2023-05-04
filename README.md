@@ -2,7 +2,7 @@
 
 This is an implementation of the standard audio API for C++ proposed in P1386.
 
-The latest published revision of this proposal can always be found at [https://wg21.link/p1386]([https://wg21.link/p1386).
+The latest published revision of this proposal can always be found at [https://wg21.link/p1386](https://wg21.link/p1386).
 
 ## Disclaimer
 
@@ -14,6 +14,17 @@ The latest published revision of this proposal can always be found at [https://w
 Personally, I think this proposal wouldn't accept recently, but I really like and want to use these interfaces, so this library will be a custom implementation, which uses [SLD3](https://github.com/libsdl-org/SDL) (very awesome Directmedia Layer, version 3 WIP, I like it due to it keep to be modern) for multi-platform in fact implementation.
 
 Basically, this repo's custom backend is a P1386-like SLD3 C++ wrapper. So, may not send pr to upstream. Because it is no longer a header-only library. (except the proposal owner accepts that)
+
+Unlike the [original repo](https://github.com/stdcpp-audio/libstdaudio), I decide to flollow the API design presented in P1386 try my best.
+So you can use it since you already read P1386.
+
+Here are some stuffs different with the [original repo](https://github.com/stdcpp-audio/libstdaudio).
+
+1. use mdspan for contiguous data view, and `std::span` vector for distant view.
+
+2. add multidimensional subscript operation since it supported by compiler.
+
+3. access operator's argument is `(channel, frame)` instead of `(frame, channel)`, which follow P1386.
 
 ## Repository structure
 

@@ -42,20 +42,20 @@ TEST_CASE("Interleaved contiguous buffer") {
   SECTION("Element read (const)") {
     const auto &cbuffer = buffer;
     CHECK(cbuffer(0, 0) == 0);
-    CHECK(cbuffer(1, 0) == 2);
-    CHECK(cbuffer(2, 0) == 4);
-    CHECK(cbuffer(0, 1) == 1);
+    CHECK(cbuffer(0, 1) == 2);
+    CHECK(cbuffer(0, 2) == 4);
+    CHECK(cbuffer(1, 0) == 1);
     CHECK(cbuffer(1, 1) == 3);
-    CHECK(cbuffer(2, 1) == 5);
+    CHECK(cbuffer(1, 2) == 5);
   }
 
   SECTION("Element write") {
     buffer(0, 0) = 6;
-    buffer(1, 0) = 7;
-    buffer(2, 0) = 8;
-    buffer(0, 1) = 9;
+    buffer(0, 1) = 7;
+    buffer(0, 2) = 8;
+    buffer(1, 0) = 9;
     buffer(1, 1) = 10;
-    buffer(2, 1) = 11;
+    buffer(1, 2) = 11;
 
     CHECK(data == std::array<float, 6>{6, 9, 7, 10, 8, 11});
   }
@@ -98,20 +98,20 @@ TEST_CASE("Deinterleaved contiguous buffer") {
   SECTION("Element read (const)") {
     const auto &cbuffer = buffer;
     CHECK(cbuffer(0, 0) == 0);
-    CHECK(cbuffer(1, 0) == 1);
-    CHECK(cbuffer(2, 0) == 2);
-    CHECK(cbuffer(0, 1) == 3);
+    CHECK(cbuffer(0, 1) == 1);
+    CHECK(cbuffer(0, 2) == 2);
+    CHECK(cbuffer(1, 0) == 3);
     CHECK(cbuffer(1, 1) == 4);
-    CHECK(cbuffer(2, 1) == 5);
+    CHECK(cbuffer(1, 2) == 5);
   }
 
   SECTION("Element write") {
     buffer(0, 0) = 6;
-    buffer(1, 0) = 7;
-    buffer(2, 0) = 8;
-    buffer(0, 1) = 9;
+    buffer(0, 1) = 7;
+    buffer(0, 2) = 8;
+    buffer(1, 0) = 9;
     buffer(1, 1) = 10;
-    buffer(2, 1) = 11;
+    buffer(1, 2) = 11;
 
     CHECK(data == std::array<float, 6>{6, 7, 8, 9, 10, 11});
   }
@@ -132,8 +132,8 @@ TEST_CASE("Deinterleaved pointer-to-pointer  buffer") {
     CHECK(!buffer.frames_are_contiguous());
   }
 
-  SECTION("channels_are_contiguous returns true") {
-    CHECK(buffer.channels_are_contiguous());
+  SECTION("channels_are_contiguous returns false") {
+    CHECK(!buffer.channels_are_contiguous());
   }
 
   SECTION("size_channels returns correct value") {
@@ -151,20 +151,20 @@ TEST_CASE("Deinterleaved pointer-to-pointer  buffer") {
   SECTION("Element read (const)") {
     const auto &cbuffer = buffer;
     CHECK(cbuffer(0, 0) == 0);
-    CHECK(cbuffer(1, 0) == 1);
-    CHECK(cbuffer(2, 0) == 2);
-    CHECK(cbuffer(0, 1) == 3);
+    CHECK(cbuffer(0, 1) == 1);
+    CHECK(cbuffer(0, 2) == 2);
+    CHECK(cbuffer(1, 0) == 3);
     CHECK(cbuffer(1, 1) == 4);
-    CHECK(cbuffer(2, 1) == 5);
+    CHECK(cbuffer(1, 2) == 5);
   }
 
   SECTION("Element write") {
     buffer(0, 0) = 6;
-    buffer(1, 0) = 7;
-    buffer(2, 0) = 8;
-    buffer(0, 1) = 9;
+    buffer(0, 1) = 7;
+    buffer(0, 2) = 8;
+    buffer(1, 0) = 9;
     buffer(1, 1) = 10;
-    buffer(2, 1) = 11;
+    buffer(1, 2) = 11;
 
     CHECK(left == std::array<float, 3>{6, 7, 8});
     CHECK(right == std::array<float, 3>{9, 10, 11});

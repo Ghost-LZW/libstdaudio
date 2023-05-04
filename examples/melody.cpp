@@ -89,7 +89,7 @@ int main() {
           auto next_sample = synth.get_next_sample();
 
           for (int channel = 0; channel < out.size_channels(); ++channel)
-            out(frame, channel) = next_sample;
+            out(channel, frame) = next_sample;
         }
       });
 
