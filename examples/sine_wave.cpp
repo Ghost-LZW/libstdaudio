@@ -37,7 +37,7 @@ int main() {
           phase = std::fmod(phase + delta, 2.0f * static_cast<float>(M_PI));
 
           for (int channel = 0; channel < out.size_channels(); ++channel)
-            out(frame, channel) = 0.2f * next_sample;
+            out(channel, frame) = 0.2f * next_sample;
         }
       });
 
