@@ -16,6 +16,7 @@
 
 #include "experimental/__p1386/audio_buffer.h"
 #include "experimental/__p1386/audio_device.h"
+#include "experimental/__p1386/audio_event.h"
 
 _LIBSTDAUDIO_NAMESPACE_BEGIN
 
@@ -614,7 +615,7 @@ private:
   }
 };
 
-template <typename F, typename /* = enable_if_t<is_nothrow_invocable_v<F>> */>
+template <AudioDeviceListCallback F>
 void set_audio_device_list_callback(audio_device_list_event event, F &&cb) {
   __coreaudio_device_config_listener::register_callback(event,
                                                         function<void()>(cb));
