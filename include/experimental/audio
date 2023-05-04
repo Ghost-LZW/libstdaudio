@@ -8,6 +8,7 @@
 
 #include "experimental/__p1386/audio_buffer.h"
 #include "experimental/__p1386/audio_device.h"
+#include "experimental/__p1386/audio_event.h"
 
 #ifdef __APPLE__
   #include "experimental/audio_backend/__coreaudio_backend.h"

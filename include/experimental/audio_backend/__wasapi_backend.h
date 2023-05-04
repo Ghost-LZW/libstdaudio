@@ -26,6 +26,7 @@
 
 #include "experimental/__p1386/audio_buffer.h"
 #include "experimental/__p1386/audio_device.h"
+#include "experimental/__p1386/audio_event.h"
 
 _LIBSTDAUDIO_NAMESPACE_BEGIN
 
@@ -914,7 +915,7 @@ private:
   array<unique_ptr<WASAPINotificationClient>, 3> _callback_monitors;
 };
 
-template <typename F, typename /* = enable_if_t<is_invocable_v<F>> */>
+template <AudioDeviceListCallback F>
 void set_audio_device_list_callback(audio_device_list_event event,
                                     F &&callback) {
   __audio_device_monitor::instance().register_callback(event,
