@@ -15,6 +15,7 @@
 #include "experimental/__p1386/audio_buffer.h"
 #include "experimental/__p1386/audio_device.h"
 #include "experimental/__p1386/audio_event.h"
+#include "experimental/__p1386/concepts.h"
 
 _LIBSTDAUDIO_NAMESPACE_BEGIN
 
@@ -50,29 +51,24 @@ public:
     return false;
   }
 
-  template <typename _SampleType>
+  template <typename SampleType>
   constexpr bool supports_sample_type() const noexcept {
     return false;
   }
 
   constexpr bool can_connect() const noexcept { return false; }
 
-  template <typename _CallbackType> void connect(_CallbackType callback) {}
+  template <typename SampleType>
+  void connect(AudioIOCallback<SampleType> auto &&io_callback) {}
 
   constexpr bool can_process() const noexcept { return false; }
 
-  using no_op_t = std::function<void(audio_device &)>;
+  using no_op = decltype([](audio_device &) noexcept {});
 
-  template <typename _StartCallbackType = no_op_t,
-            typename _StopCallbackType = no_op_t,
-            // TODO: is_nothrow_invocable_t does not compile, temporarily
-            // replaced with is_invocable_t
-            typename = enable_if_t<
-                is_invocable_v<_StartCallbackType, audio_device &> &&
-                is_invocable_v<_StopCallbackType, audio_device &>>>
-  bool start(
-      _StartCallbackType &&start_callback = [](audio_device &) noexcept {},
-      _StopCallbackType &&stop_callback = [](audio_device &) noexcept {}) {
+  template <AudioDeviceCallback StartCallback = no_op,
+            AudioDeviceCallback StopCallback = no_op>
+  bool start(StartCallback &&start_callback = {},
+             StopCallback &&stop_callback = {}) {
     return false;
   }
 
@@ -82,7 +78,8 @@ public:
 
   void wait() const { assert(false); }
 
-  template <typename _CallbackType> void process(_CallbackType &) {
+  template <typename SampleType>
+  void process(AudioIOCallback<SampleType> auto &&io_callback) {
     assert(false);
   }
 
@@ -99,7 +96,7 @@ audio_device_list get_audio_input_device_list() { return {}; }
 
 audio_device_list get_audio_output_device_list() { return {}; }
 
-template <AudioDeviceListCallback F>
-void set_audio_device_list_callback(audio_device_list_event event, F &&cb) {}
+void set_audio_device_list_callback(audio_device_list_event event,
+                                    AudioDeviceListCallback auto &&cb) {}
 
 _LIBSTDAUDIO_NAMESPACE_END

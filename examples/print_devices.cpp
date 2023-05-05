@@ -50,19 +50,19 @@ int main() {
   print_all_devices();
 
   set_audio_device_list_callback(
-      audio_device_list_event::device_list_changed, [] noexcept {
+      audio_device_list_event::device_list_changed, []() noexcept {
         std::cout << "\n=== Audio device list changed! ===\n\n";
         print_all_devices();
       });
 
   set_audio_device_list_callback(
-      audio_device_list_event::default_input_device_changed, [] noexcept {
+      audio_device_list_event::default_input_device_changed, []() noexcept {
         std::cout << "\n=== Default input device changed! ===\n\n";
         print_all_devices();
       });
 
   set_audio_device_list_callback(
-      audio_device_list_event::default_output_device_changed, [] noexcept {
+      audio_device_list_event::default_output_device_changed, []() noexcept {
         std::cout << "\n=== Default output device changed! ===\n\n";
         print_all_devices();
       });

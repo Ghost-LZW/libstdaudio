@@ -311,7 +311,7 @@ TEST_CASE("Repeatedly stopping an output device is not an error") {
 TEST_CASE("Starting an input device and registering a start callback") {
   auto devices = get_audio_input_device_list();
   for (auto &device : devices) {
-    auto start_cb = [](audio_device &) {};
+    auto start_cb = [](audio_device &) noexcept {};
     device.start(std::move(start_cb));
   }
 
@@ -321,7 +321,7 @@ TEST_CASE("Starting an input device and registering a start callback") {
 TEST_CASE("Starting an output device and registering a start callback") {
   auto devices = get_audio_output_device_list();
   for (auto &device : devices) {
-    auto start_cb = [](audio_device &) {};
+    auto start_cb = [](audio_device &) noexcept {};
     device.start(std::move(start_cb));
   }
 
@@ -332,8 +332,8 @@ TEST_CASE("Starting an input device and registering both a start and a stop "
           "callback") {
   auto devices = get_audio_input_device_list();
   for (auto &device : devices) {
-    auto start_cb = [](audio_device &) {};
-    auto stop_cb = [](audio_device &) {};
+    auto start_cb = [](audio_device &) noexcept {};
+    auto stop_cb = [](audio_device &) noexcept {};
     device.start(std::move(start_cb), std::move(stop_cb));
   }
 
@@ -344,8 +344,8 @@ TEST_CASE("Starting an output device and registering both a start and a stop "
           "callback") {
   auto devices = get_audio_output_device_list();
   for (auto &device : devices) {
-    auto start_cb = [](audio_device &) {};
-    auto stop_cb = [](audio_device &) {};
+    auto start_cb = [](audio_device &) noexcept {};
+    auto stop_cb = [](audio_device &) noexcept {};
     device.start(std::move(start_cb), std::move(stop_cb));
   }
 
@@ -367,19 +367,19 @@ TEST_CASE("Stopping an output device that is not running must succeed") {
 }
 
 TEST_CASE("Register device list change callback") {
-  auto cb = [] noexcept {};
+  auto cb = []() noexcept {};
   set_audio_device_list_callback(audio_device_list_event::device_list_changed,
                                  cb);
 }
 
 TEST_CASE("Register default input device change callback") {
-  auto cb = [] noexcept {};
+  auto cb = []() noexcept {};
   set_audio_device_list_callback(
       audio_device_list_event::default_input_device_changed, cb);
 }
 
 TEST_CASE("Register default output device change callback") {
-  auto cb = [] noexcept {};
+  auto cb = []() noexcept {};
   set_audio_device_list_callback(
       audio_device_list_event::default_output_device_changed, cb);
 }

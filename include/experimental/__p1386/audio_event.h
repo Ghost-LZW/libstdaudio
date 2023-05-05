@@ -17,7 +17,7 @@ enum class audio_device_list_event {
   default_output_device_changed,
 };
 
-template <AudioDeviceListCallback F>
-void set_audio_device_list_callback(audio_device_list_event, F &&cb);
+void set_audio_device_list_callback(audio_device_list_event,
+                                    AudioDeviceListCallback auto &&cb);
 
 _LIBSTDAUDIO_NAMESPACE_END
