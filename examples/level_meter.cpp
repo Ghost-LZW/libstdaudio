@@ -26,21 +26,22 @@ int main() {
   if (!device)
     return 1;
 
-  device->connect([&](audio_device &, audio_device_io<float> &io) noexcept {
-    if (!io.input_buffer.has_value())
-      return;
+  device->connect<float>(
+      [&](audio_device &, audio_device_io<float> &io) noexcept {
+        if (!io.input_buffer.has_value())
+          return;
 
-    auto &in = *io.input_buffer;
+        auto &in = *io.input_buffer;
 
-    for (int frame = 0; frame < in.size_frames(); ++frame) {
-      for (int channel = 0; channel < in.size_channels(); ++channel) {
-        float abs_value = std::abs(in(channel, frame));
+        for (int frame = 0; frame < in.size_frames(); ++frame) {
+          for (int channel = 0; channel < in.size_channels(); ++channel) {
+            float abs_value = std::abs(in(channel, frame));
 
-        if (abs_value > max_abs_value)
-          max_abs_value.store(abs_value);
-      }
-    }
-  });
+            if (abs_value > max_abs_value)
+              max_abs_value.store(abs_value);
+          }
+        }
+      });
 
   device->start();
   while (device->is_running()) {

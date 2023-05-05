@@ -18,16 +18,17 @@ int main() {
   std::uniform_real_distribution<float> white_noise(-1.0f, 1.0f);
 
   if (auto device = get_default_audio_output_device()) {
-    device->connect([&](audio_device &, audio_device_io<float> &io) noexcept {
-      if (!io.output_buffer.has_value())
-        return;
+    device->connect<float>(
+        [&](audio_device &, audio_device_io<float> &io) noexcept {
+          if (!io.output_buffer.has_value())
+            return;
 
-      auto &out = *io.output_buffer;
+          auto &out = *io.output_buffer;
 
-      for (int frame = 0; frame < out.size_frames(); ++frame)
-        for (int channel = 0; channel < out.size_channels(); ++channel)
-          out(channel, frame) = white_noise(gen);
-    });
+          for (int frame = 0; frame < out.size_frames(); ++frame)
+            for (int channel = 0; channel < out.size_channels(); ++channel)
+              out(channel, frame) = white_noise(gen);
+        });
 
     device->start();
     std::this_thread::sleep_for(std::chrono::seconds(5));

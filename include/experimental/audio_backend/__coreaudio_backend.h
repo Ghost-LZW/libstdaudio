@@ -615,8 +615,8 @@ private:
   }
 };
 
-template <AudioDeviceListCallback F>
-void set_audio_device_list_callback(audio_device_list_event event, F &&cb) {
+void set_audio_device_list_callback(audio_device_list_event event,
+                                    AudioDeviceListCallback auto &&cb) {
   __coreaudio_device_config_listener::register_callback(event,
                                                         function<void()>(cb));
 }

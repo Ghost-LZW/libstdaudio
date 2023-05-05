@@ -25,7 +25,7 @@ int main() {
   float delta = 2.0f * frequency_hz * float(M_PI / device->get_sample_rate());
   float phase = 0;
 
-  device->connect(
+  device->connect<float>(
       [=](audio_device &, audio_device_io<float> &io) mutable noexcept {
         if (!io.output_buffer.has_value())
           return;

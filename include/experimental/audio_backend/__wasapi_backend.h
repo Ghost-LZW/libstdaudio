@@ -915,9 +915,8 @@ private:
   array<unique_ptr<WASAPINotificationClient>, 3> _callback_monitors;
 };
 
-template <AudioDeviceListCallback F>
 void set_audio_device_list_callback(audio_device_list_event event,
-                                    F &&callback) {
+                                    AudioDeviceListCallback auto &&callback) {
   __audio_device_monitor::instance().register_callback(event,
                                                        std::move(callback));
 }
