@@ -1,5 +1,6 @@
 # libstdaudio
 # Copyright (c) 2018 - Timur Doumler
+# Copyright (c) 2023 - Lan Zongwei
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
@@ -15,6 +16,20 @@ set(CMAKE_CXX_STANDARD 23)
 
 option(AUDIO_ENABLE_TESTS "Enable tests." ON)
 option(AUDIO_ENABLE_EXAMPLES "Build examples." ON)
+option(AUDIO_WITH_SDL3 "Enable SDL backend." ON)
+option(AUDIO_STATIC "Use static libraries" OFF)
+
+find_package(Git QUIET)
+
+if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
+    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+        message(FATAL_ERROR "git submodule update --init --recursive\
+ failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+    endif()
+endif()
 
 if (MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX")
@@ -31,6 +46,41 @@ if (NOT MDSPAN_EXIST)
   add_subdirectory(third_party/mdspan)
 endif()
 
+find_package(PkgConfig)
+
+if (AUDIO_WITH_SDL3)
+  pkg_search_module(SDL3 sdl3)
+
+  add_compile_definitions(AUDIO_USE_SDL3 DEBUG_AUDIO)
+
+  if (SDL3_FOUND)
+    message(STATUS "System SDL3 found.")
+  else()
+    message(STATUS "Use internal SDL3.")
+
+    # Disable all subsystems except Audio, Events, Threads, and loadso(for shared library)
+    set(SDL_SUBSYSTEMS
+        Atomic Video Render Joystick Haptic Hidapi Power Timers
+        File CPUinfo Filesystem Sensor Locale Misc)
+    foreach(_SUB ${SDL_SUBSYSTEMS})
+      string(TOUPPER ${_SUB} _OPT)
+      set(SDL_${_OPT} OFF CACHE BOOL "Enable the ${_SUB} subsystem" FORCE)
+    endforeach()
+
+    if (AUDIO_STATIC)
+      set(SDL_STATIC ON CACHE BOOL "Build a static version of SDL" FORCE)
+      set(SDL_LOADSO OFF CACHE BOOL "Enable the LOADSO subsystem" FORCE)
+
+      foreach(AUDIO_LIB ALSA JACK PIPEWIRE PULSEAUDIO SNDIO)
+        set(SDL_${AUDIO_LIB}_SHARED OFF CACHE BOOL "Dynamically load ${AUDIO_LIB} audio support" FORCE)
+      endforeach()
+    endif()
+
+    set(SDL_DISABLE_INSTALL OFF CACHE BOOL "Disable installation of SDL3" FORCE)
+    add_subdirectory(third_party/SDL)
+  endif()
+endif()
+
 add_library(audio INTERFACE)
 add_library(std::audio ALIAS audio)
 target_include_directories(audio INTERFACE
@@ -38,6 +88,14 @@ target_include_directories(audio INTERFACE
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(audio INTERFACE std::mdspan)
+
+if (AUDIO_WITH_SDL3)
+  if (AUDIO_STATIC)
+    target_link_libraries(audio INTERFACE SDL3::SDL3-static)
+  else()
+    target_link_libraries(audio INTERFACE SDL3::SDL3)
+  endif()
+endif()
 
 ###################################################
 

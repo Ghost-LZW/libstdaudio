@@ -152,7 +152,6 @@ private:
   std::variant<contiguous_view_type, distant_view_type> _data_view;
 };
 
-// TODO: this is currently macOS specific!
 using audio_clock_t = chrono::steady_clock;
 
 template <typename SampleType> struct audio_device_io {

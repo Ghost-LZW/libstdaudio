@@ -15,16 +15,42 @@ Personally, I think this proposal wouldn't accept recently, but I really like an
 
 Basically, this repo's custom backend is a P1386-like SLD3 C++ wrapper. So, may not send pr to upstream. Because it is no longer a header-only library. (except the proposal owner accepts that)
 
-Unlike the [original repo](https://github.com/stdcpp-audio/libstdaudio), I decide to flollow the API design presented in P1386 try my best.
-So you can use it since you already read P1386.
+<del>Unlike the [original repo](https://github.com/stdcpp-audio/libstdaudio), I decide to flollow the API design presented in P1386 try my best.
+So you can use it since you already read P1386.</del> I found P1386 is not so suitable to wrapper SDL, so I decide to make some change base on P1386.
 
-Here are some stuffs different with the [original repo](https://github.com/stdcpp-audio/libstdaudio).
+Here are some stuffs different with the [original repo](https://github.com/stdcpp-audio/libstdaudio) and P1386.
 
 1. use mdspan for contiguous data view, and `std::span` vector for distant view.
 
 2. add multidimensional subscript operation since it supported by compiler.
 
 3. access operator's argument is `(channel, frame)` instead of `(frame, channel)`, which follow P1386.
+
+4. if any error happen, a `std::runtime_error` will be throw, is in the feature, exception is not suitable, another `try_xxx` api will be add, which use `std::expected` as return type.
+
+5. sdl backend API changes:
+
+```
+class audio_device:
+
+modify:
+bool start(AudioDeviceCallback auto&& startCallback = no_op,
+    AudioDeviceCallback auto&& stopCallback = no_op);
+=>
+bool start();
+
+just play the audio device.
+
+add:
+bool pause();
+
+Pause the audio device.
+
+bool set_sample_type();
+
+Set undering sample type, return false if device is running.
+
+```
 
 ## Repository structure
 

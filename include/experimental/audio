@@ -10,7 +10,9 @@
 #include "experimental/__p1386/audio_device.h"
 #include "experimental/__p1386/audio_event.h"
 
-#ifdef __APPLE__
+#if defined(AUDIO_USE_SDL3)
+  #include "experimental/audio_backend/sdl_backend.h"
+#elif defined(__APPLE__)
   #include "experimental/audio_backend/__coreaudio_backend.h"
 #elif defined(_WIN32)
   #include "experimental/audio_backend/__wasapi_backend.h"
